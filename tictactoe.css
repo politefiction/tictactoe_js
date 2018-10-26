@@ -1,5 +1,12 @@
+#container {
+    display: inline-flex;
+    border: 1px solid seagreen;
+}
+
 #grid {
-    margin-top: 40px;
+    display: inline-flex;
+    position: relative;
+    margin: 40px 20px;
 }
 
 .column {
@@ -14,12 +21,10 @@
 
 .left {
     border-right: 2px solid black;
-    margin-right: -4px;
 }
 
 .right {
     border-left: 2px solid black;
-    margin-left: -4px;
 }
 
 .top {
@@ -28,4 +33,21 @@
 
 .bottom {
     border-top: 2px solid black;
+}
+
+#panel {
+    display: inline-block;
+    position: relative;
+    border: 1px solid gray;
+    margin: 40px;
+}
+
+#panel div, button {
+    height: 70px;
+    width: 200px;
+    margin: 10px 0;
+}
+
+button:focus {
+    border-style: none;
 }
