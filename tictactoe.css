@@ -1,3 +1,7 @@
+body {
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
 #container {
     display: inline-flex;
     border: 1px solid seagreen;
@@ -11,6 +15,8 @@
 
 .column {
     display: inline-block;
+    text-align: center;
+    font-size: 3.5em;
 }
 
 .square {
