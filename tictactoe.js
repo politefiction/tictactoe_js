@@ -21,22 +21,38 @@ const Player = (name, marker) => {
     return { name, marker, chooseSquare }
 }
 
-const p1 = Player("Jane", "X");
-const p2 = Player("Chris", "O");
-let currentPlayer = p1;
+const DisplayContoller = (() => {
+    let turn = document.querySelector("#turn");
+    const displayCurrentPlayer = () => {
+        turn.textContent = `Current turn: ${currentPlayer.name}`;
+    }
+    return { displayCurrentPlayer }
+})();
 
-const GameControl = (() => {
+const GameController = (() => {
     const runGame = () => {
         Gameboard.clearBoard();
+        DisplayContoller.displayCurrentPlayer();
         squares.forEach((square) => { square.onclick = () => {
             currentPlayer.chooseSquare(square);
             currentPlayer = (currentPlayer === p1 ? p2 : p1);
+            DisplayContoller.displayCurrentPlayer();
         } })
     }
     return { runGame }
 })();
 
 const newGame = document.querySelector("button");
-newGame.onclick = () => { GameControl.runGame(); }
+newGame.onclick = () => { GameController.runGame(); }
 
-GameControl.runGame();
+const p1 = Player("Jane", "X");
+const p2 = Player("Chris", "O");
+let currentPlayer = p1;
+
+GameController.runGame();
+
+// Other notes:
+//  define victory conditions
+//  allow players to choose own names
+//  if allowing players to choose markers, prevent duplicate markers
+//  do I need both addMarker and chooseSquare?
