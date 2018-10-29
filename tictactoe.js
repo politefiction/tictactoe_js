@@ -10,8 +10,29 @@ const Gameboard = (() => {
         square.textContent = "";
         // Add check to make sure?
     })
-    // check for victory?
-    return { addMarker, clearBoard }
+
+    const vectors = [".left", ".vtmiddle", ".right", 
+                    ".top", ".hzmiddle", ".bottom", 
+                    [0, 4, 8], [2, 4, 6]];
+    const vecArrays = [];
+    vectors.forEach((vector) => {
+        let arr = [];
+        if (typeof vector === "string") {
+            arr = document.querySelector(vector).firstChild ?
+                [].slice.call(document.querySelector(vector).children) :
+                [].slice.call(document.querySelectorAll(vector));
+        } else {
+            vector.forEach(ind =>  arr.push(squares[ind]) );
+        }
+        vecArrays.push(arr);
+    })
+
+    const didSomeoneWin = () => {
+        return vecArrays.some(vec => vec.filter(sq => 
+            sq.textContent === currentPlayer.marker).length === 3
+        )
+    }
+    return { addMarker, clearBoard, didSomeoneWin }
 })();
 
 const Player = (name, marker) => {
@@ -35,6 +56,9 @@ const GameController = (() => {
         DisplayContoller.displayCurrentPlayer();
         squares.forEach((square) => { square.onclick = () => {
             currentPlayer.chooseSquare(square);
+            if (Gameboard.didSomeoneWin()) {
+                return console.log(`${currentPlayer.name} has won!`);
+            }
             currentPlayer = (currentPlayer === p1 ? p2 : p1);
             DisplayContoller.displayCurrentPlayer();
         } })
@@ -51,8 +75,3 @@ let currentPlayer = p1;
 
 GameController.runGame();
 
-// Other notes:
-//  define victory conditions
-//  allow players to choose own names
-//  if allowing players to choose markers, prevent duplicate markers
-//  do I need both addMarker and chooseSquare?
