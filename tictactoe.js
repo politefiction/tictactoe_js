@@ -1,11 +1,16 @@
-const squares = document.querySelectorAll(".square");
-
 const Gameboard = (() => {
+    const squares = document.querySelectorAll(".square");
+
+    const clearBoard = () => {
+        squares.forEach((square) => { square.textContent = ""; })
+    }
+
     const startNewGame = () => { 
-        let newGame = confirm("Are you sure you want to start a new game?")
-        if (newGame) {
+        let newGameboard = confirm("Are you sure you want to start a new game?")
+        if (newGameboard) {
             currentPlayer = p1;
-            squares.forEach((square) => { square.textContent = ""; }) 
+            clearBoard();
+            GameController.runGame();
         }
     }
 
@@ -13,14 +18,14 @@ const Gameboard = (() => {
                     ".top", ".hzmiddle", ".bottom", 
                     [0, 4, 8], [2, 4, 6]];
     const vecArrays = [];
-    vectors.forEach((vector) => {
+    vectors.map((vector) => {
         let arr = [];
         if (typeof vector === "string") {
             arr = document.querySelector(vector).firstChild ?
                 [].slice.call(document.querySelector(vector).children) :
                 [].slice.call(document.querySelectorAll(vector));
         } else {
-            vector.forEach(ind =>  arr.push(squares[ind]) );
+            vector.map(ind =>  arr.push(squares[ind]) );
         }
         vecArrays.push(arr);
     })
@@ -31,7 +36,7 @@ const Gameboard = (() => {
         )
     }
 
-    return { startNewGame, didSomeoneWin }
+    return { squares, startNewGame, didSomeoneWin }
 })();
 
 const Player = (name, marker) => {
@@ -53,12 +58,12 @@ const DisplayContoller = (() => {
 
 const GameController = (() => {
     const runGame = () => {
-        Gameboard.startNewGame();
         DisplayContoller.displayCurrentPlayer();
-        squares.forEach((square) => { square.onclick = () => {
+        Gameboard.squares.forEach((square) => { square.onclick = () => {
             currentPlayer.chooseSquare(square);
             if (Gameboard.didSomeoneWin()) {
                 return console.log(`${currentPlayer.name} has won!`);
+                // prompt for new game
             }
             currentPlayer = (currentPlayer === p1 ? p2 : p1);
             DisplayContoller.displayCurrentPlayer();
@@ -68,7 +73,7 @@ const GameController = (() => {
 })();
 
 const newGame = document.querySelector("button");
-newGame.onclick = () => { GameController.runGame(); }
+newGame.onclick = () => { Gameboard.startNewGame(); }
 
 const p1 = Player("Jane", "X");
 const p2 = Player("Chris", "O");
