@@ -6,10 +6,13 @@ const Gameboard = (() => {
             square.textContent = marker;
         }
     }
-    const clearBoard = () => squares.forEach((square) => {
-        square.textContent = "";
-        // Add check to make sure?
-    })
+    const startNewGame = () => { 
+        let newGame = confirm("Are you sure you want to start a new game?")
+        if (newGame) {
+            currentPlayer = p1;
+            squares.forEach((square) => { square.textContent = ""; }) 
+        }
+    }
 
     const vectors = [".left", ".vtmiddle", ".right", 
                     ".top", ".hzmiddle", ".bottom", 
@@ -32,7 +35,7 @@ const Gameboard = (() => {
             sq.textContent === currentPlayer.marker).length === 3
         )
     }
-    return { addMarker, clearBoard, didSomeoneWin }
+    return { addMarker, startNewGame, didSomeoneWin }
 })();
 
 const Player = (name, marker) => {
@@ -52,7 +55,7 @@ const DisplayContoller = (() => {
 
 const GameController = (() => {
     const runGame = () => {
-        Gameboard.clearBoard();
+        Gameboard.startNewGame();
         DisplayContoller.displayCurrentPlayer();
         squares.forEach((square) => { square.onclick = () => {
             currentPlayer.chooseSquare(square);
