@@ -1,5 +1,8 @@
+const query = document.querySelector.bind(document);
+const queryAll = document.querySelectorAll.bind(document);
+
 const Gameboard = (() => {
-    const squares = document.querySelectorAll(".square");
+    const squares = queryAll(".square");
 
     const clearBoard = () => {
         squares.forEach((square) => { square.textContent = ""; })
@@ -21,9 +24,9 @@ const Gameboard = (() => {
     vectors.map((vector) => {
         let arr = [];
         if (typeof vector === "string") {
-            arr = document.querySelector(vector).firstChild ?
-                [].slice.call(document.querySelector(vector).children) :
-                [].slice.call(document.querySelectorAll(vector));
+            arr = query(vector).firstChild ?
+                [].slice.call(query(vector).children) :
+                [].slice.call(queryAll(vector));
         } else {
             vector.map(ind =>  arr.push(squares[ind]) );
         }
@@ -49,7 +52,7 @@ const Player = (name, marker) => {
 }
 
 const DisplayContoller = (() => {
-    let turn = document.querySelector("#turn");
+    let turn = query("#turn");
     const displayCurrentPlayer = () => {
         turn.textContent = `Current turn: ${currentPlayer.name}`;
     }
@@ -72,7 +75,7 @@ const GameController = (() => {
     return { runGame }
 })();
 
-const newGame = document.querySelector("button");
+const newGame = query("button");
 newGame.onclick = () => { Gameboard.startNewGame(); }
 
 const p1 = Player("Jane", "X");
