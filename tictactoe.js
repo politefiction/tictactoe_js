@@ -1,11 +1,6 @@
 const squares = document.querySelectorAll(".square");
 
 const Gameboard = (() => {
-    const addMarker = (square, marker) => {
-        if (square.textContent === "") {
-            square.textContent = marker;
-        }
-    }
     const startNewGame = () => { 
         let newGame = confirm("Are you sure you want to start a new game?")
         if (newGame) {
@@ -35,12 +30,15 @@ const Gameboard = (() => {
             sq.textContent === currentPlayer.marker).length === 3
         )
     }
-    return { addMarker, startNewGame, didSomeoneWin }
+
+    return { startNewGame, didSomeoneWin }
 })();
 
 const Player = (name, marker) => {
     const chooseSquare = (square) => {
-        Gameboard.addMarker(square, marker)
+        if (square.textContent === "") {
+            square.textContent = marker;
+        }
     }
     return { name, marker, chooseSquare }
 }
