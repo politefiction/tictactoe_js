@@ -1,6 +1,8 @@
 const query = document.querySelector.bind(document);
 const queryAll = document.querySelectorAll.bind(document);
 
+let currentPlayer;
+
 const Gameboard = (() => {
     const squares = queryAll(".square");
 
@@ -11,7 +13,6 @@ const Gameboard = (() => {
     const startNewGame = () => { 
         let newGameboard = confirm("Are you sure you want to start a new game?")
         if (newGameboard) {
-            currentPlayer = p1;
             clearBoard();
             GameController.runGame();
         }
@@ -34,8 +35,8 @@ const Gameboard = (() => {
     })
 
     const didSomeoneWin = () => {
-        return vecArrays.some(vec => vec.filter(sq => 
-            sq.textContent === currentPlayer.marker).length === 3
+        return vecArrays.some(vec => vec.every(sq => 
+            sq.textContent === currentPlayer.marker)
         )
     }
 
@@ -60,7 +61,17 @@ const DisplayContoller = (() => {
 })();
 
 const GameController = (() => {
+    let p1;
+    let p2;
+
+    const establishPlayers = () => {
+        p1 = Player(prompt("Player 1, enter your name"), "X");
+        p2 = Player(prompt("Player 2, enter your name"), "O");
+        currentPlayer = p1;
+    }
+    
     const runGame = () => {
+        establishPlayers();
         DisplayContoller.displayCurrentPlayer();
         Gameboard.squares.forEach((square) => { square.onclick = () => {
             currentPlayer.chooseSquare(square);
@@ -78,9 +89,14 @@ const GameController = (() => {
 const newGame = query("button");
 newGame.onclick = () => { Gameboard.startNewGame(); }
 
-const p1 = Player("Jane", "X");
-const p2 = Player("Chris", "O");
-let currentPlayer = p1;
+// const p1 = Player(prompt("Player 1, enter your name"), "X");
+// const p2 = Player(prompt("Player 2, enter your name"), "O");
+// const currentPlayer = p1;
 
 GameController.runGame();
 
+//const establishPlayers = () => {
+    //let p1 = Player(prompt("Player 1, enter your name"), "X")
+    //let p2 = Player(prompt("Player 2, enter your name"), "O")
+    //return { p1, p2 }
+//}
