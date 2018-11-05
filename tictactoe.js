@@ -61,42 +61,54 @@ const DisplayContoller = (() => {
 })();
 
 const GameController = (() => {
+    const squArray = [].slice.call(Gameboard.squares);
+    const status = query("#status");
     let p1;
     let p2;
-
+    
     const establishPlayers = () => {
         p1 = Player(prompt("Player 1, enter your name"), "X");
         p2 = Player(prompt("Player 2, enter your name"), "O");
         currentPlayer = p1;
     }
-    
+
+   const takeTurn = (e) => {
+        currentPlayer.chooseSquare(e.target);
+        if (Gameboard.didSomeoneWin()) { 
+            victory = true;
+            // Add to display controller?
+            return status.textContent = `${currentPlayer.name} has won! Click the button above to start a new game!`;
+        } else {
+            currentPlayer = (currentPlayer === p1 ? p2 : p1);
+            DisplayContoller.displayCurrentPlayer();
+        };
+    }
+
+
     const runGame = () => {
         establishPlayers();
         DisplayContoller.displayCurrentPlayer();
-        Gameboard.squares.forEach((square) => { square.onclick = () => {
-            currentPlayer.chooseSquare(square);
-            if (Gameboard.didSomeoneWin()) {
-                return console.log(`${currentPlayer.name} has won!`);
-                // prompt for new game
-            }
-            currentPlayer = (currentPlayer === p1 ? p2 : p1);
-            DisplayContoller.displayCurrentPlayer();
-        } })
+        squArray.map(square => { 
+            square.addEventListener('click', takeTurn, false); 
+        })
+
     }
+    
     return { runGame }
 })();
 
 const newGame = query("button");
 newGame.onclick = () => { Gameboard.startNewGame(); }
 
-// const p1 = Player(prompt("Player 1, enter your name"), "X");
-// const p2 = Player(prompt("Player 2, enter your name"), "O");
-// const currentPlayer = p1;
 
 GameController.runGame();
 
-//const establishPlayers = () => {
-    //let p1 = Player(prompt("Player 1, enter your name"), "X")
-    //let p2 = Player(prompt("Player 2, enter your name"), "O")
-    //return { p1, p2 }
-//}
+/*
+
+    const endMoves = () => {
+        squArray.map(square => {
+            square.removeEventListener('click', takeTurn, true);
+        })
+    }
+
+*/
