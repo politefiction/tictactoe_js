@@ -71,20 +71,26 @@ const Display = (() => {
 
 const GameController = (() => {
     const squArray = [].slice.call(Gameboard.squares);
-    const status = query("#status");
     let p1;
     let p2;
     
     const establishPlayers = () => {
-        p1 = Player(prompt("Player 1, enter your name"), "X");
-        p2 = Player(prompt("Player 2, enter your name"), "O");
+        let diffNames;
+        if ([p1, p2].some(p => p !== undefined)) { 
+            diffNames = confirm("Would you like to choose new names?"); 
+        }
+
+        if ([p1, p2].some(p => p === undefined) || diffNames) {
+            p1 = Player(prompt("Player 1, enter your name"), "X");
+            p2 = Player(prompt("Player 2, enter your name"), "O");
+        } 
+
         currentPlayer = p1;
     }
 
    const takeTurn = (e) => {
         currentPlayer.chooseSquare(e.target);
         if (Gameboard.didSomeoneWin()) { 
-            victory = true;
             return Display.giveStatus();
         } else if (squArray.every(sq => sq.textContent != "")) {
             return Display.giveStatus("Stalemate! Click button above for a new game!");
@@ -112,13 +118,3 @@ newGame.onclick = () => { Gameboard.startNewGame(); }
 
 
 GameController.runGame();
-
-/*
-
-    const endMoves = () => {
-        squArray.map(square => {
-            square.removeEventListener('click', takeTurn, true);
-        })
-    }
-
-*/
