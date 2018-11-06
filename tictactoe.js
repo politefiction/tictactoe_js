@@ -52,12 +52,21 @@ const Player = (name, marker) => {
     return { name, marker, chooseSquare }
 }
 
-const DisplayContoller = (() => {
-    let turn = query("#turn");
-    const displayCurrentPlayer = () => {
+const Display = (() => {
+    const turn = query("#turn");
+    const status = query("#status");
+
+    const showWhoseTurn = () => {
         turn.textContent = `Current turn: ${currentPlayer.name}`;
     }
-    return { displayCurrentPlayer }
+
+    const giveStatus = (statement) => {
+        status.textContent = Gameboard.didSomeoneWin() ?
+            `${currentPlayer.name} has won! Click the button above to start a new game!` :
+            (statement || "Game in progress")
+    }
+    
+    return { showWhoseTurn, giveStatus }
 })();
 
 const GameController = (() => {
@@ -76,18 +85,19 @@ const GameController = (() => {
         currentPlayer.chooseSquare(e.target);
         if (Gameboard.didSomeoneWin()) { 
             victory = true;
-            // Add to display controller?
-            return status.textContent = `${currentPlayer.name} has won! Click the button above to start a new game!`;
+            return Display.giveStatus();
+        } else if (squArray.every(sq => sq.textContent != "")) {
+            return Display.giveStatus("Stalemate! Click button above for a new game!");
         } else {
             currentPlayer = (currentPlayer === p1 ? p2 : p1);
-            DisplayContoller.displayCurrentPlayer();
+            Display.showWhoseTurn();
         };
     }
 
-
     const runGame = () => {
         establishPlayers();
-        DisplayContoller.displayCurrentPlayer();
+        Display.showWhoseTurn();
+        Display.giveStatus();
         squArray.map(square => { 
             square.addEventListener('click', takeTurn, false); 
         })
