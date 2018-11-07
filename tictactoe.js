@@ -11,7 +11,8 @@ const Gameboard = (() => {
     }
 
     const startNewGame = () => { 
-        let newGameboard = confirm("Are you sure you want to start a new game?")
+        let newGameboard = (didSomeoneWin() || isBoardFull()) ?
+            true : confirm("Are you sure you want to start a new game?");
         if (newGameboard) {
             clearBoard();
             GameController.runGame();
@@ -40,7 +41,12 @@ const Gameboard = (() => {
         )
     }
 
-    return { squares, startNewGame, didSomeoneWin }
+    const isBoardFull = () => {
+        squArray = [].slice.call(squares);
+        return squArray.every(sq => sq.textContent != "")
+    }
+
+    return { squares, startNewGame, didSomeoneWin, isBoardFull }
 })();
 
 const Player = (name, marker) => {
@@ -60,10 +66,14 @@ const Display = (() => {
         turn.textContent = `Current turn: ${currentPlayer.name}`;
     }
 
-    const giveStatus = (statement) => {
-        status.textContent = Gameboard.didSomeoneWin() ?
-            `${currentPlayer.name} has won! Click the button above to start a new game!` :
-            (statement || "Game in progress")
+    const giveStatus = () => { 
+        if (Gameboard.didSomeoneWin()) {
+            status.textContent = `${currentPlayer.name} has won! Click the button above to start a new game!`;
+        } else if (Gameboard.isBoardFull()) {
+            status.textContent ="Stalemate! Click button above for a new game!";
+        } else { 
+            status.textContent = "Game in progress."
+        }
     }
     
     return { showWhoseTurn, giveStatus }
@@ -90,10 +100,8 @@ const GameController = (() => {
 
    const takeTurn = (e) => {
         currentPlayer.chooseSquare(e.target);
-        if (Gameboard.didSomeoneWin()) { 
+        if (Gameboard.didSomeoneWin() || Gameboard.isBoardFull()) { 
             return Display.giveStatus();
-        } else if (squArray.every(sq => sq.textContent != "")) {
-            return Display.giveStatus("Stalemate! Click button above for a new game!");
         } else {
             currentPlayer = (currentPlayer === p1 ? p2 : p1);
             Display.showWhoseTurn();
@@ -116,5 +124,15 @@ const GameController = (() => {
 const newGame = query("button");
 newGame.onclick = () => { Gameboard.startNewGame(); }
 
+document.addEventListener("DOMContentLoaded", () => {
+    // Hmm. Is there anyway to load the board before all this?
+    if (confirm("Welcome to Tic Tac Toe! Would you like to play?")) {
+        GameController.runGame();
+    } else {
+        alert("Huh. Alright. Well, just hit that button when you're ready, then.")
+    }
+})
 
-GameController.runGame();
+/*
+
+*/
