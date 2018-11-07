@@ -1,10 +1,17 @@
 body {
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    background-image: linear-gradient(-45deg, rgb(182, 190, 132), rgb(166, 219, 221));
 }
 
 #container {
     display: inline-flex;
+    position: relative;
     border: 1px solid seagreen;
+    border-radius: 3px;
+    height: 300px;
+    width: 560px;
+    margin: 20px 0 0 100px;
+    background-color: rgb(238, 240, 235);
 }
 
 #grid {
@@ -44,8 +51,12 @@ body {
 #panel {
     display: inline-block;
     position: relative;
-    border: 1px solid gray;
     margin: 40px;
+}
+
+button {
+    background-color: lemonchiffon;
+    border: 2px solid #C0C0C0;
 }
 
 #panel div, button {
@@ -58,10 +69,14 @@ button:focus {
     border-style: none;
 }
 
+button:hover {
+    background-color: rgb(221, 217, 179);
+}
+
 #status {
     display: block;
     position: relative;
-    margin-top: 5px;
+    margin: 15px 0 0 100px;
     height: 50px;
     width: auto;
 
