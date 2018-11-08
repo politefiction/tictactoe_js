@@ -121,16 +121,15 @@ const GameController = (() => {
     return { runGame }
 })();
 
+
 const newGame = query("button");
 newGame.onclick = () => { Gameboard.startNewGame(); }
 
-
 document.addEventListener("DOMContentLoaded", () => {
-    // Hmm. Is there anyway to load the board before all this?
     if (confirm("Welcome to Tic Tac Toe! Would you like to play?")) {
         GameController.runGame();
     } else {
-        alert("Huh. Alright. Well, just hit that button when you're ready, then.")
+        alert("Huh, alright. Well, just hit that button when you're ready, then.")
     }
 })
 
